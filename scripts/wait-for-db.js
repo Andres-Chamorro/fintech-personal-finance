@@ -4,28 +4,25 @@ const maxRetries = 30;
 const retryDelay = 2000;
 
 const config = {
-  host: 'localhost',
-  port: 5432,
-  user: 'fintech_user',
-  password: 'fintech_password_2026',
-  database: 'fintech_db',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT || '5432'),
+  user: process.env.DATABASE_USER || 'fintech_user',
+  password: process.env.DATABASE_PASSWORD || 'fintech_password_2026',
+  database: process.env.DATABASE_NAME || 'fintech_db',
 };
 
 async function waitForDatabase(retries = 0) {
   const client = new Client(config);
-  
+
   try {
     await client.connect();
-    console.log('✅ Database is ready!');
     await client.end();
     process.exit(0);
-  } catch (error) {
+  } catch {
     if (retries < maxRetries) {
-      console.log(`⏳ Waiting for database... (attempt ${retries + 1}/${maxRetries})`);
       await new Promise(resolve => setTimeout(resolve, retryDelay));
       return waitForDatabase(retries + 1);
     } else {
-      console.error('❌ Database connection failed after max retries');
       process.exit(1);
     }
   }
