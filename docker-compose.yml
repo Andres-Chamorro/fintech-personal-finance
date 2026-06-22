@@ -33,7 +33,7 @@ services:
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-fintech_password_2026}
       DATABASE_NAME: ${POSTGRES_DB:-fintech_db}
       JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production}
-      JWT_EXPIRATION: ${JWT_EXPIRATION:-24h}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-1h}
       PORT: 3001
       NODE_ENV: development
     ports:

@@ -87,7 +87,7 @@ jobs:
           DATABASE_PASSWORD: test_password_ci
           DATABASE_NAME: fintech_db_test
           JWT_SECRET: ci-test-jwt-secret-key-min-32-chars
-          JWT_EXPIRATION: 24h
+          JWT_EXPIRATION: 1h
           NODE_ENV: test
         run: npx jest --config ./test/jest-integracion.json --forceExit
 
