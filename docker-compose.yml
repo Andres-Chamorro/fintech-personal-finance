@@ -4,16 +4,16 @@ services:
     image: postgres:15-alpine
     container_name: fintech-db
     environment:
-      POSTGRES_USER: fintech_user
-      POSTGRES_PASSWORD: fintech_password_2026
-      POSTGRES_DB: fintech_db
+      POSTGRES_USER: ${POSTGRES_USER:-fintech_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fintech_password_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-fintech_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fintech_user -d fintech_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fintech_user} -d ${POSTGRES_DB:-fintech_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -29,11 +29,11 @@ services:
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_USER: fintech_user
-      DATABASE_PASSWORD: fintech_password_2026
-      DATABASE_NAME: fintech_db
-      JWT_SECRET: fintech-super-secret-key-2026-change-in-production
-      JWT_EXPIRATION: 24h
+      DATABASE_USER: ${POSTGRES_USER:-fintech_user}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-fintech_password_2026}
+      DATABASE_NAME: ${POSTGRES_DB:-fintech_db}
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-24h}
       PORT: 3001
       NODE_ENV: development
     ports:
