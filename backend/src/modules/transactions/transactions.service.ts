@@ -2,10 +2,9 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
-  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Transaction, TransactionType } from './entities/transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -123,14 +122,14 @@ export class TransactionsService {
       throw new ForbiddenException('No tienes permiso para acceder a esta transacción');
     }
 
-    const updateData: any = {};
+    const updateData: Partial<Pick<Transaction, 'type' | 'amount' | 'description' | 'transactionDate' | 'categoryId'>> = {};
     if (updateDto.type !== undefined) updateData.type = updateDto.type;
     if (updateDto.amount !== undefined) updateData.amount = updateDto.amount;
     if (updateDto.description !== undefined) updateData.description = updateDto.description;
-    if (updateDto.transactionDate !== undefined) updateData.transactionDate = updateDto.transactionDate;
+    if (updateDto.transactionDate !== undefined) updateData.transactionDate = new Date(updateDto.transactionDate);
 
     if ('categoryId' in updateDto) {
-      updateData.categoryId = updateDto.categoryId ?? null;
+      updateData.categoryId = updateDto.categoryId ?? undefined;
     }
 
     await this.transactionRepository.update(id, updateData);
