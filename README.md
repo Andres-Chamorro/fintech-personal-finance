@@ -1,262 +1,199 @@
-# 💰 Fintech - Sistema de Gestión Financiera Personal
+# Fintech - Sistema de Gestión Financiera Personal
 
-MVP de gestión de movimientos financieros personales desarrollado con **NestJS** (Backend) y **Next.js** (Frontend) para una fintech colombiana.
+MVP de gestión de movimientos financieros personales para una fintech colombiana, desarrollado con **NestJS** (Backend) y **Next.js** (Frontend).
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
-- [Características](#-características)
-- [Stack Tecnológico](#-stack-tecnológico)
-- [Arquitectura](#-arquitectura)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación y Ejecución](#-instalación-y-ejecución)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [API Endpoints](#-api-endpoints)
-- [Testing](#-testing)
-- [CI/CD](#-cicd)
-- [Seguridad](#-seguridad)
-- [Uso de IA en el Desarrollo](#-uso-de-ia-en-el-desarrollo)
-
----
-
-## ✨ Características
-
-### Módulo 1: Autenticación y Gestión de Sesión
-- ✅ Registro de usuarios con correo y contraseña
-- ✅ Login con autenticación segura mediante JWT
-- ✅ Sesión controlada con expiración de tokens (24 horas)
-- ✅ Aislamiento total de datos por usuario (row-level security)
-
-### Módulo 2: Movimientos Financieros
-- ✅ CRUD completo de transacciones (ingreso/egreso)
-- ✅ Filtrado por tipo, categoría y rango de fechas
-- ✅ Paginación y ordenamiento
-- ✅ Cálculo de balance en tiempo real (Ingresos - Egresos)
-
-### Módulo 3: Categorías y Presupuestos
-- ✅ Gestión de categorías personalizadas
-- ✅ Presupuestos mensuales por categoría
-- ✅ **Alertas automáticas al 80% y 100% del presupuesto**
-- ✅ Dashboard con estado de presupuestos
+- [Stack Tecnológico](#stack-tecnológico)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación y Ejecución](#instalación-y-ejecución)
+- [Credenciales por Defecto](#credenciales-por-defecto)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [API Endpoints](#api-endpoints)
+- [Testing](#testing)
+- [CI/CD](#cicd)
+- [Seguridad](#seguridad)
+- [Justificación del Stack](#justificación-del-stack)
+- [AI Usage](#ai-usage)
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 ### Backend
-- **Node.js 20+** con **TypeScript**
-- **NestJS** - Framework enterprise con arquitectura modular
-- **TypeORM** - ORM con soporte para migraciones
-- **PostgreSQL 15** - Base de datos relacional ACID-compliant
-- **Passport JWT** - Autenticación y autorización
-- **Bcrypt** - Hash de contraseñas
-- **Helmet** - Seguridad HTTP headers
-- **Swagger** - Documentación automática de API
+| Tecnología | Versión | Propósito |
+|---|---|---|
+| Node.js | >= 22.x | Runtime de JavaScript |
+| NestJS | 10.3.x | Framework backend con arquitectura modular |
+| TypeScript | 5.3.x | Tipado estático |
+| TypeORM | 0.3.x | ORM con soporte para migraciones |
+| PostgreSQL | 15 (Alpine) | Base de datos relacional ACID-compliant |
+| Passport + JWT | 10.x | Autenticación y autorización |
+| Bcrypt | 5.x | Hash de contraseñas |
+| Helmet | 7.x | Headers de seguridad HTTP |
+| Swagger | 7.x | Documentación automática de API |
+| Jest | 29.7.x | Testing unitario e integración |
 
 ### Frontend
-- **Next.js 14** - Framework React con App Router
-- **TypeScript** - Tipado estático
-- **TanStack Query (React Query)** - Gestión de estado y cache
-- **Axios** - Cliente HTTP
-- **Tailwind CSS** - Estilos utility-first
-- **React Hook Form** - Manejo de formularios
+| Tecnología | Versión | Propósito |
+|---|---|---|
+| Next.js | 14.0.x | Framework React con App Router |
+| React | 18.2.x | Librería de UI |
+| TypeScript | 5.x | Tipado estático |
+| Tailwind CSS | 3.x | Estilos utility-first |
+| Axios | 1.x | Cliente HTTP con interceptors |
+| Vitest | 1.1.x | Testing unitario |
+| Playwright | 1.61.x | Testing E2E |
 
-### DevOps
-- **Docker & Docker Compose** - Contenedorización
-- **Jest** - Testing unitario e integración
-- **ESLint & Prettier** - Calidad de código
-- **GitHub Actions** - CI/CD (opcional)
-
----
-
-## 🏗️ Arquitectura
-
-### Patrón: Layered Architecture
-
-```
-┌─────────────────┐
-│   Controller    │ ← Maneja HTTP requests, validación
-├─────────────────┤
-│    Service      │ ← Lógica de negocio
-├─────────────────┤
-│   Repository    │ ← Acceso a datos (TypeORM)
-├─────────────────┤
-│   PostgreSQL    │ ← Persistencia
-└─────────────────┘
-```
-
-### Justificación Técnica
-
-**¿Por qué Layered Architecture y no Clean Architecture o Hexagonal?**
-
-- ✅ **Simplicidad para MVP**: Estructura clara y directa
-- ✅ **Onboarding rápido**: Fácil para nuevos desarrolladores
-- ✅ **Separación clara**: Controller → Service → Repository
-- ✅ **Escalable**: Se puede migrar a Hexagonal sin reescritura completa
+### Infraestructura
+| Tecnología | Versión | Propósito |
+|---|---|---|
+| Docker | 24+ | Contenedorización |
+| Docker Compose | 2.x | Orquestación de servicios |
+| GitHub Actions | - | CI/CD pipeline |
 
 ---
 
-## 📦 Requisitos Previos
+## Requisitos Previos
 
-- **Node.js** >= 20.0.0
-- **npm** >= 10.0.0
-- **Docker** y **Docker Compose**
-- **PostgreSQL** (si no usas Docker)
+- **Docker** y **Docker Compose** (para ejecución completa)
+- **Node.js** >= 22.0.0 y **npm** >= 10.0.0 (para desarrollo local)
 
 ---
 
-## 🚀 Instalación y Ejecución
+## Instalación y Ejecución
 
-### ⚡ Método 1: Todo Dockerizado (Recomendado - Más Simple)
-
-**Requisito único**: Docker Desktop instalado
+### Un solo comando (Docker)
 
 ```bash
-# 1. Clonar el repositorio
 git clone <repository-url>
 cd fintech-personal-finance
-
-# 2. OPCIÓN A: Modo Desarrollo (con hot-reload)
-docker-compose -f docker-compose.dev.yml up --build
-
-# O en Windows, doble clic en:
-start-docker-dev.bat
-
-# OPCIÓN B: Modo Producción (optimizado)
-docker-compose up --build
-
-# O en Windows, doble clic en:
-start-docker.bat
+docker compose up --build
 ```
 
-**Listo!** Accede a:
+Esto levanta los 3 servicios en orden:
+1. **PostgreSQL** (puerto 5432) con health checks
+2. **Backend NestJS** (puerto 3001) espera a que la DB esté lista
+3. **Frontend Next.js** (puerto 3000)
+
+**Accesos:**
 - Frontend: http://localhost:3000
-- Backend: http://localhost:3001/api
-- Swagger: http://localhost:3001/api/docs
+- Backend API: http://localhost:3001/api
+- Swagger docs: http://localhost:3001/api/docs
 
-📖 **Ver [DOCKER-GUIDE.md](./DOCKER-GUIDE.md) para guía completa de Docker**
-
----
-
-### 🛠️ Método 2: Instalación Local (Sin Docker)
-
-**Requisitos**: Node.js 20+, npm 10+, Docker (solo para PostgreSQL)
+### Desarrollo local (sin Docker para backend/frontend)
 
 ```bash
-# 1. Clonar el repositorio
-git clone <repository-url>
-cd fintech-personal-finance
-
-# 2. Instalar dependencias raíz
+# Instalar dependencias
 npm install
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
 
-# 3. Instalar dependencias del backend
-cd backend
-npm install
-cd ..
-
-# 4. Instalar dependencias del frontend
-cd frontend
-npm install
-cd ..
-
-# 5. Copiar variables de entorno
+# Copiar variables de entorno
 cp .env.example backend/.env
 
-# 6. COMANDO ÚNICO - Levanta TODO el ecosistema
+# Levantar todo (DB en Docker + backend + frontend)
 npm run start:dev
 ```
 
-### ¿Qué hace `npm run start:dev`?
+---
 
-1. ✅ Levanta PostgreSQL en Docker
-2. ✅ Espera a que la DB esté lista
-3. ✅ Ejecuta migraciones automáticas
-4. ✅ Inicia backend en `http://localhost:3001`
-5. ✅ Inicia frontend en `http://localhost:3000`
+## Credenciales por Defecto
+
+### Base de datos (Docker)
+| Variable | Valor |
+|---|---|
+| POSTGRES_USER | `fintech_user` |
+| POSTGRES_PASSWORD | `fintech_password_2026` |
+| POSTGRES_DB | `fintech_db` |
+
+### Aplicación
+| Variable | Valor |
+|---|---|
+| JWT_SECRET | Configurar en `.env` (mínimo 32 caracteres) |
+| JWT_EXPIRATION | `1h` |
+
+> Las credenciales de Docker son valores por defecto para desarrollo. En producción, usar variables de entorno propias (ver `.env.example`).
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 fintech-personal-finance/
-├── backend/                    # NestJS Backend
+├── backend/                      # NestJS Backend
 │   ├── src/
 │   │   ├── modules/
-│   │   │   ├── auth/          # Autenticación JWT
-│   │   │   ├── transactions/  # Movimientos financieros
-│   │   │   ├── categories/    # Categorías
-│   │   │   └── budgets/       # Presupuestos con alertas
-│   │   ├── database/          # Configuración TypeORM
+│   │   │   ├── auth/             # JWT, registro, login, guards
+│   │   │   ├── transactions/     # CRUD, filtros, balance
+│   │   │   ├── categories/       # CRUD, categorías por defecto
+│   │   │   └── budgets/          # CRUD, alertas 80%/100%
+│   │   ├── database/             # Configuración TypeORM
 │   │   └── main.ts
-│   └── test/                  # Tests unitarios e integración
+│   └── test/
+│       ├── unitarias/            # Tests unitarios (Jest)
+│       └── integracion/          # Tests de integración (Jest + DB)
 │
-├── frontend/                   # Next.js Frontend
+├── frontend/                     # Next.js Frontend
 │   ├── src/
-│   │   ├── app/               # App Router (Next.js 14)
-│   │   ├── components/        # Componentes reutilizables
-│   │   ├── services/          # Llamadas API
-│   │   ├── hooks/             # Custom hooks (useAuth)
-│   │   └── types/             # TypeScript types
+│   │   ├── app/                  # Pages (App Router)
+│   │   ├── components/           # PageHeader, FormModal, LoadingSpinner, Toast
+│   │   ├── services/             # Llamadas API (axios)
+│   │   ├── hooks/                # useAuth
+│   │   ├── lib/                  # axios config, format utilities
+│   │   └── types/                # Interfaces TypeScript
+│   └── test/
+│       ├── unitarias/            # Tests unitarios (Vitest)
+│       └── e2e/                  # Tests E2E (Playwright)
 │
 ├── database/
-│   └── init.sql               # Script de inicialización DB
-│
-├── docker-compose.yml         # Orquestación PostgreSQL
-└── package.json               # Scripts de inicio raíz
+│   └── init.sql                  # Schema inicial PostgreSQL
+├── docker-compose.yml            # Orquestación de servicios
+├── .github/workflows/ci.yml      # Pipeline CI/CD
+└── package.json                  # Scripts de orquestación raíz
 ```
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Autenticación
+| Método | Ruta | Descripción |
+|---|---|---|
+| POST | `/api/auth/register` | Registro de usuario |
+| POST | `/api/auth/login` | Login (retorna JWT) |
 
-```http
-POST /api/auth/register
-POST /api/auth/login
-```
+### Transacciones (requiere JWT)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/transactions` | Listar con filtros y paginación |
+| POST | `/api/transactions` | Crear transacción |
+| GET | `/api/transactions/:id` | Obtener una |
+| PATCH | `/api/transactions/:id` | Actualizar |
+| DELETE | `/api/transactions/:id` | Eliminar |
+| GET | `/api/transactions/balance` | Balance (Ingresos - Egresos) |
 
-### Transacciones
+### Categorías (requiere JWT)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/categories` | Listar categorías del usuario |
+| POST | `/api/categories` | Crear categoría |
+| PATCH | `/api/categories/:id` | Actualizar |
+| DELETE | `/api/categories/:id` | Eliminar |
 
-```http
-GET    /api/transactions          # Listar con filtros y paginación
-POST   /api/transactions          # Crear
-GET    /api/transactions/:id      # Obtener una
-PATCH  /api/transactions/:id      # Actualizar
-DELETE /api/transactions/:id      # Eliminar
-GET    /api/transactions/balance  # Balance (Ingresos - Egresos)
-```
+### Presupuestos (requiere JWT)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/budgets?month=6&year=2026` | Listar con alertas |
+| POST | `/api/budgets` | Crear presupuesto |
+| PATCH | `/api/budgets/:id` | Actualizar monto |
+| DELETE | `/api/budgets/:id` | Eliminar |
 
-### Categorías
-
-```http
-GET    /api/categories
-POST   /api/categories
-GET    /api/categories/:id
-PATCH  /api/categories/:id
-DELETE /api/categories/:id
-```
-
-### Presupuestos
-
-```http
-GET    /api/budgets?month=6&year=2026  # Con alertas 80%/100%
-POST   /api/budgets
-GET    /api/budgets/:id
-PATCH  /api/budgets/:id
-DELETE /api/budgets/:id
-```
-
-### Documentación Swagger
-
-```
-http://localhost:3001/api/docs
-```
+Documentación interactiva en **Swagger**: http://localhost:3001/api/docs
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Backend
 
@@ -264,13 +201,13 @@ http://localhost:3001/api/docs
 cd backend
 
 # Tests unitarios
-npm run test
+npx jest --config test/jest-unitarias.json
 
-# Tests con cobertura
+# Tests de integración (requiere DB)
+npx jest --config test/jest-integracion.json
+
+# Todos los tests con coverage
 npm run test:cov
-
-# Tests e2e
-npm run test:e2e
 ```
 
 ### Frontend
@@ -278,182 +215,90 @@ npm run test:e2e
 ```bash
 cd frontend
 
-# Tests con Vitest
-npm run test
+# Tests unitarios (Vitest)
+npx vitest run
 
-# Tests con UI
-npm run test:ui
+# Tests E2E (requiere backend + frontend corriendo)
+npx playwright test
 ```
 
----
+### Cobertura de tests
 
-## 🔐 Seguridad
-
-### Implementaciones de Seguridad Financiera
-
-1. **Autenticación**
-   - JWT con expiración de 24 horas
-   - Contraseñas hasheadas con bcrypt (salt rounds = 10)
-   - Rate limiting: 100 requests/15min
-
-2. **Aislamiento de Datos**
-   - Row-level security en todas las queries
-   - Filtro automático por `userId`
-   - Guards de NestJS en todos los endpoints
-
-3. **Prevención de Ataques**
-   - Prepared statements (TypeORM) → SQL Injection
-   - Helmet → Headers de seguridad HTTP
-   - CORS configurado → Solo frontend permitido
-   - express-validator → Sanitización de inputs
-
-4. **Manejo de Dinero**
-   - PostgreSQL tipo `NUMERIC(15,2)` → Sin errores de punto flotante
-   - Validación estricta en DTOs con class-validator
+| Tipo | Cantidad | Framework |
+|---|---|---|
+| Backend unitarios | 55 tests | Jest |
+| Backend integración | 59 tests | Jest + PostgreSQL |
+| Frontend unitarios | 25 tests | Vitest |
+| Frontend E2E | 29 tests | Playwright |
+| **Total** | **168 tests** | |
 
 ---
 
-## 🤖 Uso de IA en el Desarrollo
+## CI/CD
 
-Este proyecto fue desarrollado con asistencia de **IA (Claude Sonnet 4.5)** siguiendo un enfoque de **ingeniería colaborativa**.
+Pipeline de GitHub Actions con 4 jobs paralelos:
 
-### Decisiones Arquitectónicas Tomadas
+1. **Backend - Lint & Unit Tests**: ESLint + tests unitarios con coverage
+2. **Backend - Integration Tests**: Tests con PostgreSQL real (service container)
+3. **Frontend - Lint, Build & Unit Tests**: ESLint + build Next.js + Vitest
+4. **Docker - Build, Verify & E2E**: Construye imágenes, verifica health y corre Playwright E2E
 
-#### 1. **¿Por qué NestJS y no Express puro?**
-
-**Decisión**: NestJS  
-**Justificación**:
-- Arquitectura opinada reduce errores de diseño
-- Dependency Injection nativa facilita testing
-- Decorators simplifican validación y autenticación
-- Swagger integrado ahorra tiempo de documentación
-
-**Alternativas consideradas**:
-- Express: Más rápido de setup, pero requiere disciplina manual
-- Fastify: Mejor performance, pero ecosistema más pequeño
-
-**Riesgo mitigado**: Curva de aprendizaje inicial de NestJS compensada con mejor mantenibilidad a largo plazo.
+Se ejecuta en cada `push` y `pull_request` a `main` y `develop`.
 
 ---
 
-#### 2. **¿Por qué Next.js y no React puro con Vite?**
+## Seguridad
 
-**Decisión**: Next.js 14  
-**Justificación**:
-- App Router moderno con Server Components
-- Routing integrado sin librerías extra
-- Optimización de imágenes y fuentes automática
-- SEO-ready si luego se necesita landing pública
-
-**Alternativas consideradas**:
-- React + Vite: Más liviano, pero Next.js aporta estándares
+1. **Autenticación**: JWT con expiración de 1 hora, contraseñas con bcrypt (salt rounds = 10)
+2. **Aislamiento de datos**: Todas las queries filtran por `userId` del token JWT. Un usuario no puede acceder a datos de otro.
+3. **Prevención de ataques**: Helmet (headers HTTP), CORS (solo frontend), rate limiting (100 req/15min), prepared statements (TypeORM contra SQL injection)
+4. **Precisión financiera**: PostgreSQL `DECIMAL(15,2)` para montos, sin errores de punto flotante
 
 ---
 
-#### 3. **¿PostgreSQL o MongoDB?**
+## Justificación del Stack
 
-**Decisión**: PostgreSQL  
-**Justificación CRÍTICA para Fintech**:
-- ACID compliant (transacciones financieras seguras)
-- Tipo NUMERIC evita errores de punto flotante en dinero
-- Relaciones fuertes (integridad referencial)
-- Row-level security nativa
+### ¿Por qué NestJS y Next.js juntos?
+Se eligió esta combinación porque ambos frameworks comparten el mismo lenguaje (TypeScript) y filosofía de desarrollo. Esto permite que un desarrollador trabaje en backend y frontend sin cambiar de contexto ni de herramientas. Además, ambos tienen ecosistemas maduros con gran comunidad, lo que facilita encontrar soluciones y librerías compatibles.
 
-**MongoDB rechazado**: NoSQL no es apropiado para datos financieros que requieren consistencia estricta.
+### NestJS como backend (en vez de Express puro)
+Express es minimalista y requiere que el desarrollador configure manualmente la estructura, validación, documentación y testing. Para un proyecto con 4 módulos (auth, transacciones, categorías, presupuestos), esto genera código inconsistente y difícil de mantener. NestJS resuelve esto con una arquitectura modular donde cada módulo tiene su controlador, servicio y DTOs con validación automática. También incluye Swagger integrado, lo que genera la documentación de la API sin esfuerzo adicional.
 
----
+### Next.js como frontend (en vez de React + Vite)
+React con Vite requiere configurar manualmente el routing, la estructura de carpetas y las optimizaciones de rendimiento. Next.js incluye todo esto de serie: el App Router organiza las páginas por carpetas, el Server Side Rendering mejora la carga inicial, y el sistema de optimización de fuentes e imágenes funciona sin configuración. Para un MVP que podría necesitar una landing pública en el futuro, Next.js ya está preparado para SEO.
 
-#### 4. **Alertas de Presupuesto: ¿Backend o Frontend?**
+### PostgreSQL como base de datos (en vez de MongoDB)
+En una aplicación financiera, los datos deben ser consistentes siempre. PostgreSQL garantiza transacciones ACID: si una operación falla a mitad de camino, se revierte todo. Además, el tipo `DECIMAL(15,2)` almacena montos de dinero con precisión exacta, evitando los errores de redondeo que ocurren con números decimales en JavaScript o en bases de datos que usan punto flotante. MongoDB no ofrece estas garantías por defecto, y usarlo para datos financieros es un anti-patrón reconocido en la industria.
 
-**Decisión**: Backend (calculadas en `budgets.service.ts`)  
-**Justificación**:
-- Lógica de negocio debe vivir en backend (single source of truth)
-- Frontend solo renderiza, no calcula porcentajes
-- Facilita auditoría y testing
+### Alertas calculadas en el backend (no en el frontend)
+La lógica de alertas de presupuesto (80% y 100%) se calcula en el servidor, no en el navegador. Si se calculara en el frontend, cada cliente (web, mobile, API externa) tendría que implementar la misma lógica por separado, con el riesgo de que los resultados sean diferentes. Al centralizarlo en el backend, hay una única fuente de verdad: todos los clientes reciben las mismas alertas con los mismos datos.
 
 ---
 
-### Proceso de Colaboración con IA
+## AI Usage
 
-1. **Definición de requerimientos**: Lectura completa de `requeriments.md`
-2. **Propuesta de stack**: IA presentó 3 alternativas con pros/contras
-3. **Validación humana**: Selección de NestJS + Next.js
-4. **Implementación iterativa**:
-   - IA generó estructura base
-   - Humano validó seguridad financiera
-   - IA ajustó según feedback
-5. **Documentación**: IA redactó README explicativo
+### Herramientas utilizadas
+- **Claude Code (Claude Sonnet 4.6)**: Asistente principal utilizado durante todo el proceso de desarrollo del proyecto.
 
-### Transparencia
+### ¿En qué se usó la IA?
+La IA se utilizó como herramienta de apoyo en **todas las etapas del desarrollo** para aumentar la velocidad de implementación: diseño de la arquitectura, generación de código backend y frontend, creación de tests, configuración de Docker y CI/CD, y refactoring para buenas prácticas. En cada caso, el código generado fue revisado, probado y ajustado según las necesidades del proyecto.
 
-- ✅ Toda decisión técnica fue explicada y justificada
-- ✅ Alternativas fueron presentadas para decisión humana final
-- ✅ Código sigue estándares de la industria (no "código de IA descuidado")
+### Ejemplo 1: Implementación de alertas de presupuesto
+**Prompt**: "La API debe retornar una alerta cuando el gasto acumulado de la categoría supere el 80% y el 100% de su presupuesto."
 
----
+**Resultado**: La IA generó el servicio `BudgetsService` con métodos `calculateSpentForBudget()` (query agregada sobre transacciones del mes) y `generateAlerts()` (evaluación de porcentaje contra umbrales). El código generado fue correcto y pasó los tests de integración sin modificaciones.
 
-## 📊 Estado del Proyecto
+### Ejemplo 2: Debugging de tests E2E
+**Prompt**: "Los tests E2E fallan con 16 de 18 errores."
 
-✅ **COMPLETO Y LISTO PARA PRODUCCIÓN**
+**Resultado**: La IA identificó que `testEmail` se definía una sola vez a nivel de `describe` pero `beforeEach` intentaba registrar el mismo email en cada test, causando conflictos 409. También identificó race conditions entre `router.push()` y el renderizado del toast. Los fixes fueron iterativos — tomó varias rondas de ejecución y análisis de screenshots para resolver todos los casos.
 
-### Módulos Implementados
+### Ejemplo rechazado/modificado
+**Sugerencia de la IA**: Usar `router.push('/dashboard')` de Next.js para la navegación post-login desde un `setTimeout`.
 
-| Módulo | Estado | Descripción |
-|--------|--------|-------------|
-| ✅ Autenticación | Completo | Registro, Login, JWT, Guards |
-| ✅ Transacciones | Completo | CRUD, Filtros, Paginación, Balance |
-| ✅ Categorías | Completo | Gestión completa de categorías |
-| ✅ Presupuestos | Completo | Alertas 80%/100%, Dashboard |
-| ✅ Base de Datos | Completo | PostgreSQL con TypeORM |
-| ✅ Frontend | Completo | Next.js 14 con React Query |
-| ✅ Tests | Completo | Unitarios + E2E |
-| ✅ CI/CD | Completo | GitHub Actions configurado |
-| ✅ Documentación | Completo | Swagger + README detallado |
+**Problema**: `router.push()` no navegaba de forma confiable después de un hard reload con `window.location.href`. El comportamiento era intermitente — funcionaba en algunos tests y fallaba en otros bajo carga paralela.
 
-### Requerimientos Cumplidos
+**Decisión tomada**: Reemplazar `router.push()` con `window.location.href` para navegación post-login/logout (garantiza navegación), y cambiar los botones del dashboard de `<button onClick={router.push}>` a `<Link href>` de Next.js (navegan sin depender de React hydration). La IA misma propuso este fix después de analizar los screenshots de Playwright que mostraban la página de login en vez del dashboard.
 
-- ✅ **Persistencia Real**: PostgreSQL (no in-memory)
-- ✅ **Seguridad Financiera**: JWT, bcrypt, row-level security
-- ✅ **Automatización**: Tests + CI/CD configurado
-- ✅ **Script Único**: `npm run start:dev` levanta todo
-
----
-
-## 📄 Licencia
-
-Este proyecto es un MVP académico para evaluación universitaria.
-
----
-
-## 👨‍💻 Autor
-
-Desarrollado para la materia de **Desarrollo de Software** - Fintech Colombia 2026
-
-**Tecnologías Utilizadas**:
-- Backend: NestJS 10 + TypeScript + PostgreSQL
-- Frontend: Next.js 14 + React 18 + TanStack Query
-- DevOps: Docker + GitHub Actions
-
----
-
-## 🆘 Soporte
-
-Para problemas o preguntas:
-1. Leer el archivo **INSTRUCTIONS.md** con el paso a paso detallado
-2. Revisar la documentación Swagger: `http://localhost:3001/api/docs`
-3. Verificar logs del backend: `npm run docker:logs`
-4. Abrir un issue en el repositorio con detalles del error
-
----
-
-## 📚 Documentación Adicional
-
-- **INSTRUCTIONS.md**: Guía detallada de instalación paso a paso
-- **requeriments.md**: Requerimientos originales del proyecto
-- **Swagger Docs**: http://localhost:3001/api/docs (después de iniciar)
-
----
-
-## 🎉 ¡Proyecto Completo!
-
-Este sistema cumple con TODOS los requerimientos funcionales y restricciones técnicas innegociables establecidas en el documento de requerimientos.
+### Valoración del impacto de la IA
+La IA aceleró significativamente el desarrollo del MVP (estimado 3-4x más rápido que sin ella), especialmente en scaffolding de módulos NestJS, generación de DTOs con validadores, y configuración de Docker/CI. Sin embargo, los tests E2E requirieron múltiples iteraciones de debugging manual — la IA proponía fixes que resolvían un problema pero introducían otros (como el caso de `router.push`). La revisión humana fue indispensable para decisiones de seguridad (expiración JWT, aislamiento de datos) y para validar que el código cumplía los requerimientos del negocio fintech.
