@@ -18,7 +18,7 @@ import { Budget } from '../modules/budgets/entities/budget.entity';
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         entities: [User, Transaction, Category, Budget],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: ['development', 'test'].includes(configService.get('NODE_ENV') || ''),
         logging: configService.get('NODE_ENV') === 'development',
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
