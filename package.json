@@ -1,0 +1,34 @@
+{
+  "name": "fintech-personal-finance",
+  "version": "1.0.0",
+  "description": "MVP de Gestión Financiera Personal para Fintech Colombiana",
+  "scripts": {
+    "docker:start": "docker-compose up --build",
+    "docker:stop": "docker-compose down",
+    "docker:clean": "docker-compose down -v",
+    "docker:logs": "docker-compose logs -f",
+    "start:dev": "docker-compose up -d && npm run wait-for-db && npm run migrate && concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "wait-for-db": "node scripts/wait-for-db.js",
+    "migrate": "cd backend && npm run migration:run",
+    "backend:dev": "cd backend && npm run start:dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "backend:build": "cd backend && npm run build",
+    "frontend:build": "cd frontend && npm run build",
+    "test": "npm run backend:test && npm run frontend:test",
+    "backend:test": "cd backend && npm run test",
+    "frontend:test": "cd frontend && npm run test",
+    "lint": "npm run backend:lint && npm run frontend:lint",
+    "backend:lint": "cd backend && npm run lint",
+    "frontend:lint": "cd frontend && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.22.0"
+  }
+}

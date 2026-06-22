@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+
+# Instalar todas las dependencias (incluyendo dev)
+RUN npm install
+
+# Copiar código fuente
+COPY . .
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando para ejecutar en modo desarrollo
+CMD ["npm", "run", "dev"]
