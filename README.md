@@ -63,7 +63,7 @@ MVP de gestión de movimientos financieros personales para una fintech colombian
 
 ## Instalación y Ejecución
 
-### Un solo comando (Docker)
+### Script de inicio — Un solo comando levanta todo
 
 ```bash
 git clone <repository-url>
@@ -71,10 +71,12 @@ cd fintech-personal-finance
 docker compose up --build
 ```
 
-Esto levanta los 3 servicios en orden:
-1. **PostgreSQL** (puerto 5432) con health checks
-2. **Backend NestJS** (puerto 3001) espera a que la DB esté lista
-3. **Frontend Next.js** (puerto 3000)
+Este único comando levanta la base de datos, el backend y el frontend automáticamente:
+1. **PostgreSQL** (puerto 5432) — se inicia primero con health checks
+2. **Backend NestJS** (puerto 3001) — espera a que la DB esté lista antes de arrancar
+3. **Frontend Next.js** (puerto 3000) — espera a que el backend esté disponible
+
+No se necesita instalar dependencias, configurar variables de entorno ni ejecutar migraciones manualmente. Todo está orquestado en `docker-compose.yml`.
 
 **Accesos:**
 - Frontend: http://localhost:3000
