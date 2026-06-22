@@ -138,7 +138,8 @@ export class AuthService {
    * @returns Usuario sin información sensible
    */
   private sanitizeUser(user: User) {
-    const { password: _password, ...sanitized } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...sanitized } = user;
     return sanitized;
   }
 }
