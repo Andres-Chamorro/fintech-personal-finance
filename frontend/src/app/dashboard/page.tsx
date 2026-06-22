@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { transactionsService } from '@/services/transactions.service';
 import { budgetsService } from '@/services/budgets.service';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { formatCurrency } from '@/lib/format';
 import type { Balance, Budget } from '@/types';
 
 export default function DashboardPage() {
@@ -30,8 +32,8 @@ export default function DashboardPage() {
         ]);
         setBalance(balanceData);
         setBudgets(budgetsData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } catch {
+        // errors silently handled — dashboard shows zero values
       } finally {
         setIsLoading(false);
       }
@@ -41,14 +43,6 @@ export default function DashboardPage() {
   }, [user, authLoading, router]);
 
   if (authLoading || !user) return null;
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,9 +67,7 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-          </div>
+          <LoadingSpinner />
         ) : (
           <>
             {/* Balance Cards */}

@@ -5,6 +5,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { categoriesService } from '@/services/categories.service';
 import Toast from '@/components/Toast';
+import PageHeader from '@/components/PageHeader';
+import FormModal from '@/components/FormModal';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { getErrorMessage } from '@/lib/format';
 import type { Category } from '@/types';
 
 export default function CategoriesPage() {
@@ -36,8 +40,10 @@ export default function CategoriesPage() {
     try {
       const data = await categoriesService.getAll();
       setCategories(data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
+    } catch {
+      setToastMessage('Error al cargar categorías');
+      setToastType('error');
+      setShowToast(true);
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +65,11 @@ export default function CategoriesPage() {
     setShowModal(true);
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingCategory(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -71,13 +82,11 @@ export default function CategoriesPage() {
       }
       setToastType('success');
       setShowToast(true);
-      setShowModal(false);
-      setEditingCategory(null);
+      closeModal();
       setFormData({ name: '', description: '', color: '#3B82F6' });
       fetchCategories();
-    } catch (error: any) {
-      console.error('Error saving category:', error);
-      setToastMessage(error.response?.data?.message || 'Error al guardar categoría');
+    } catch (error) {
+      setToastMessage(getErrorMessage(error));
       setToastType('error');
       setShowToast(true);
     }
@@ -91,9 +100,8 @@ export default function CategoriesPage() {
         setToastType('success');
         setShowToast(true);
         fetchCategories();
-      } catch (error: any) {
-        console.error('Error deleting category:', error);
-        setToastMessage(error.response?.data?.message || 'Error al eliminar categoría');
+      } catch (error) {
+        setToastMessage(getErrorMessage(error));
         setToastType('error');
         setShowToast(true);
       }
@@ -105,36 +113,11 @@ export default function CategoriesPage() {
   return (
     <>
       {showToast && (
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          onClose={() => setShowToast(false)}
-        />
+        <Toast message={toastMessage} type={toastType} onClose={() => setShowToast(false)} />
       )}
 
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push('/dashboard')}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                  title="Volver al Dashboard"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  <span className="font-medium">Volver</span>
-                </button>
-                <h1 className="text-2xl font-bold text-gray-900">Categorías</h1>
-              </div>
-              <button onClick={logout} className="text-sm text-red-600 hover:text-red-700 font-medium">
-                Cerrar Sesión
-              </button>
-            </div>
-          </div>
-        </header>
+        <PageHeader title="Categorías" onLogout={logout} />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6">
@@ -147,9 +130,7 @@ export default function CategoriesPage() {
           </div>
 
           {isLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-            </div>
+            <LoadingSpinner />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {categories.map((category) => (
@@ -175,16 +156,10 @@ export default function CategoriesPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => openEditModal(category)}
-                        className="text-primary-600 hover:text-primary-900 text-sm"
-                      >
+                      <button onClick={() => openEditModal(category)} className="text-primary-600 hover:text-primary-900 text-sm">
                         Editar
                       </button>
-                      <button
-                        onClick={() => handleDelete(category.id)}
-                        className="text-red-600 hover:text-red-900 text-sm"
-                      >
+                      <button onClick={() => handleDelete(category.id)} className="text-red-600 hover:text-red-900 text-sm">
                         Eliminar
                       </button>
                     </div>
@@ -196,68 +171,47 @@ export default function CategoriesPage() {
         </main>
       </div>
 
-      {/* Modal Crear/Editar */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-6">
-              {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white"
-                  placeholder="Ej: Alimentación"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Descripción (opcional)
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white"
-                  rows={3}
-                  placeholder="Descripción de la categoría"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                    className="h-10 w-20 rounded border border-gray-300"
-                  />
-                  <span className="text-sm text-gray-600">{formData.color}</span>
-                </div>
-              </div>
-              <div className="flex gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => { setShowModal(false); setEditingCategory(null); }}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-                >
-                  {editingCategory ? 'Guardar' : 'Crear'}
-                </button>
-              </div>
-            </form>
+      <FormModal
+        title={editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
+        isOpen={showModal}
+        onClose={closeModal}
+        onSubmit={handleSubmit}
+        submitLabel={editingCategory ? 'Guardar' : 'Crear'}
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+          <input
+            type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            placeholder="Ej: Alimentación"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Descripción (opcional)</label>
+          <textarea
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            rows={3}
+            placeholder="Descripción de la categoría"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={formData.color}
+              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+              className="h-10 w-20 rounded border border-gray-300"
+            />
+            <span className="text-sm text-gray-600">{formData.color}</span>
           </div>
         </div>
-      )}
+      </FormModal>
     </>
   );
 }
