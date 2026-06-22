@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Toast from '@/components/Toast';
+import { getErrorMessage } from '@/lib/format';
 import type { LoginCredentials } from '@/types';
 
 export default function LoginPage() {
@@ -34,8 +35,8 @@ export default function LoginPage() {
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 1000);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Error al iniciar sesión';
+    } catch (err) {
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       setToastMessage(errorMessage);
       setToastType('error');

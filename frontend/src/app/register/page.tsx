@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
 import Link from 'next/link';
 import Toast from '@/components/Toast';
+import { getErrorMessage } from '@/lib/format';
 import type { RegisterData } from '@/types';
 
 export default function RegisterPage() {
@@ -47,8 +48,8 @@ export default function RegisterPage() {
       setTimeout(() => {
         router.push('/login');
       }, 2000);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Error al registrar usuario';
+    } catch (err) {
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       setToastMessage(errorMessage);
       setToastType('error');
