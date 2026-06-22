@@ -138,7 +138,7 @@ export class AuthService {
    * @returns Usuario sin información sensible
    */
   private sanitizeUser(user: User) {
-    const { password, ...sanitized } = user;
+    const { password: _password, ...sanitized } = user;
     return sanitized;
   }
 }

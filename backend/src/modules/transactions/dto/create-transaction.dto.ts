@@ -19,7 +19,7 @@ import { TransactionType } from '../entities/transaction.entity';
 // Validador personalizado para fechas no futuras
 @ValidatorConstraint({ name: 'IsNotFutureDate', async: false })
 export class IsNotFutureDate implements ValidatorConstraintInterface {
-  validate(dateString: string, args: ValidationArguments) {
+  validate(dateString: string, _args: ValidationArguments) {
     if (!dateString) return false;
     
     const inputDate = new Date(dateString + 'T00:00:00');
@@ -29,7 +29,7 @@ export class IsNotFutureDate implements ValidatorConstraintInterface {
     return inputDate <= today;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage(_args: ValidationArguments) {
     return 'La fecha de la transacción no puede ser futura';
   }
 }

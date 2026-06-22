@@ -14,7 +14,7 @@ import {
 // Validador personalizado para mes/año no pasados
 @ValidatorConstraint({ name: 'IsCurrentOrFutureMonth', async: false })
 export class IsCurrentOrFutureMonth implements ValidatorConstraintInterface {
-  validate(value: any, args: ValidationArguments) {
+  validate(_value: unknown, args: ValidationArguments) {
     const object = args.object as CreateBudgetDto;
     const { month, year } = object;
     
@@ -37,7 +37,7 @@ export class IsCurrentOrFutureMonth implements ValidatorConstraintInterface {
     return true;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage(_args: ValidationArguments) {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
