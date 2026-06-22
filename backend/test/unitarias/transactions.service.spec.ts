@@ -183,7 +183,7 @@ describe('TransactionsService', () => {
       const result = await service.update(mockUserId, mockTransactionId, updateDto);
 
       expect(mockRepository.update).toHaveBeenCalledWith(mockTransactionId, {
-        categoryId: null,
+        categoryId: undefined,
       });
     });
 
