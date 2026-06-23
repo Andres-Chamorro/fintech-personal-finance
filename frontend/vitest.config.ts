@@ -9,6 +9,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./test/setup.ts'],
     include: ['./test/unitarias/**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/services/**', 'src/lib/format.ts', 'src/components/Toast.tsx'],
+    },
   },
   resolve: {
     alias: {
