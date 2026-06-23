@@ -114,6 +114,62 @@ describe('TransactionsService', () => {
     });
   });
 
+  describe('findAll', () => {
+    const mockQueryBuilder = {
+      leftJoinAndSelect: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      orderBy: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      take: jest.fn().mockReturnThis(),
+      getManyAndCount: jest.fn().mockResolvedValue([[mockTransaction], 1]),
+    };
+
+    beforeEach(() => {
+      mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    });
+
+    it('should return paginated transactions', async () => {
+      const result = await service.findAll(mockUserId, { page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(result.data).toHaveLength(1);
+      expect(result.pagination).toEqual({ page: 1, limit: 10, total: 1, totalPages: 1 });
+    });
+
+    it('should filter by type', async () => {
+      await service.findAll(mockUserId, { type: TransactionType.EXPENSE, page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('transaction.type = :type', { type: TransactionType.EXPENSE });
+    });
+
+    it('should filter by categoryId', async () => {
+      await service.findAll(mockUserId, { categoryId: mockCategoryId, page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('transaction.categoryId = :categoryId', { categoryId: mockCategoryId });
+    });
+
+    it('should filter by date range', async () => {
+      await service.findAll(mockUserId, { startDate: '2026-06-01', endDate: '2026-06-30', page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
+        'transaction.transactionDate BETWEEN :startDate AND :endDate',
+        { startDate: '2026-06-01', endDate: '2026-06-30' },
+      );
+    });
+
+    it('should filter by startDate only', async () => {
+      await service.findAll(mockUserId, { startDate: '2026-06-01', page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('transaction.transactionDate >= :startDate', { startDate: '2026-06-01' });
+    });
+
+    it('should filter by endDate only', async () => {
+      await service.findAll(mockUserId, { endDate: '2026-06-30', page: 1, limit: 10, sortOrder: 'DESC' });
+
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('transaction.transactionDate <= :endDate', { endDate: '2026-06-30' });
+    });
+  });
+
   describe('findOne', () => {
     it('should return a transaction if found and user owns it', async () => {
       mockRepository.findOne.mockResolvedValue(mockTransaction);

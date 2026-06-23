@@ -258,6 +258,34 @@ describe('CategoriesService', () => {
     });
   });
 
+  describe('createDefaults', () => {
+    it('should create 12 default categories for a user', async () => {
+      mockCategoryRepository.create.mockImplementation((data) => data);
+      mockCategoryRepository.save.mockResolvedValue([]);
+
+      await service.createDefaults(userId);
+
+      expect(mockCategoryRepository.create).toHaveBeenCalledTimes(12);
+      expect(mockCategoryRepository.save).toHaveBeenCalledTimes(1);
+    });
+
+    it('should include standard category names', async () => {
+      const createdCategories: any[] = [];
+      mockCategoryRepository.create.mockImplementation((data) => {
+        createdCategories.push(data);
+        return data;
+      });
+      mockCategoryRepository.save.mockResolvedValue([]);
+
+      await service.createDefaults(userId);
+
+      const names = createdCategories.map((c) => c.name);
+      expect(names).toContain('Alimentación');
+      expect(names).toContain('Salario');
+      expect(names).toContain('Otros');
+    });
+  });
+
   describe('authorization', () => {
     it('should validate ownership on all operations', async () => {
       const otherUserCategory = { ...mockCategory, userId: otherUserId };
