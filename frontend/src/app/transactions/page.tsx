@@ -264,7 +264,7 @@ export default function TransactionsPage() {
                   {transactions.map((transaction) => (
                     <tr key={transaction.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {new Date(transaction.transactionDate).toLocaleDateString('es-CO')}
+                        {new Date(transaction.transactionDate + 'T00:00:00').toLocaleDateString('es-CO')}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">{transaction.description}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
