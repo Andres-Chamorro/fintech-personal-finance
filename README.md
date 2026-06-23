@@ -78,10 +78,19 @@ Este único comando levanta la base de datos, el backend y el frontend automáti
 
 No se necesita instalar dependencias, configurar variables de entorno ni ejecutar migraciones manualmente. Todo está orquestado en `docker-compose.yml`.
 
-**Accesos:**
+**Accesos locales:**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:3001/api
 - Swagger docs: http://localhost:3001/api/docs
+
+### Despliegue en producción (Railway)
+
+La aplicación está desplegada y accesible públicamente:
+
+- **Frontend (aplicación web)**: https://hopeful-prosperity-production-c8bd.up.railway.app/
+- **Backend API (documentación Swagger)**: https://fintech-personal-finance-production.up.railway.app/api/docs
+
+El frontend se conecta al backend mediante la API REST. Swagger permite probar todos los endpoints directamente desde el navegador.
 
 ### Desarrollo local (sin Docker para backend/frontend)
 
@@ -275,6 +284,10 @@ En una aplicación financiera, los datos deben ser consistentes siempre. Postgre
 ### Alertas calculadas en el backend (no en el frontend)
 La lógica de alertas de presupuesto (80% y 100%) se calcula en el servidor, no en el navegador. Si se calculara en el frontend, cada cliente (web, mobile, API externa) tendría que implementar la misma lógica por separado, con el riesgo de que los resultados sean diferentes. Al centralizarlo en el backend, hay una única fuente de verdad: todos los clientes reciben las mismas alertas con los mismos datos.
 
+### Diagrama de arquitectura
+
+![Arquitectura General](diagrams/ArquitecturaGeneral.png)
+
 ---
 
 ## AI Usage
@@ -284,6 +297,18 @@ La lógica de alertas de presupuesto (80% y 100%) se calcula en el servidor, no 
 
 ### ¿En qué se usó la IA?
 La IA se utilizó como herramienta de apoyo en **todas las etapas del desarrollo** para aumentar la velocidad de implementación: diseño de la arquitectura, generación de código backend y frontend, creación de tests, configuración de Docker y CI/CD, y refactoring para buenas prácticas. En cada caso, el código generado fue revisado, probado y ajustado según las necesidades del proyecto.
+
+### Proceso de diseño: antes y después de la IA
+
+El diseño del modelo relacional se realizó en dos iteraciones:
+
+1. **Primera iteración (sin IA)**: Se diseñó el modelo relacional manualmente a partir de los requerimientos, definiendo las tablas `users`, `transactions`, `categories` y `budgets` con sus relaciones básicas. Este primer diseño sirvió como base para entender el dominio del problema.
+
+![MR Primera Iteración — Sin IA](diagrams/MR_DIAGRAM%20-%201_iteration.png)
+
+2. **Segunda iteración (con IA)**: Durante la implementación con Claude Code, el modelo se refinó: se agregaron constraints (`UNIQUE` en presupuestos por usuario/categoría/mes/año), se ajustaron los tipos de datos (`DECIMAL(15,2)` para montos financieros), se definieron las políticas de cascade delete y se agregó `SET NULL` en la relación de transacciones con categorías para no perder datos si se elimina una categoría.
+
+![MR Segunda Iteración — Con IA](diagrams/MR_DIAGRAM%20AI%20-%202_iteration.png)
 
 ### Ejemplo 1: Implementación de alertas de presupuesto
 **Prompt**: "La API debe retornar una alerta cuando el gasto acumulado de la categoría supere el 80% y el 100% de su presupuesto."
